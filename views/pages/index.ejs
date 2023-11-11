@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+      integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <title>Attendance Monitoring</title>
+  </head>
+  <body>
+    <nav class="navbar bg-body-tertiary mb-5">
+      <div class="container-fluid">
+        <div class="d-flex justify-content-between align-items-center w-100">
+          <div>
+            <span class="navbar-brand mb-0 h1">Attendance Monitoring</span>
+          </div>
+          <div class="d-flex">
+            <div class="me-2">
+              <select
+                class="form-select"
+                aria-label="Default select example"
+                id="ports"
+              ></select>
+            </div>
+            <div class="me-2">
+              <select
+                class="form-select"
+                aria-label="Default select example"
+                id="baudRates"
+              ></select>
+            </div>
+            <button type="button" class="btn btn-success" id="btnConnect">
+              <i class="fa-solid fa-plug"></i>
+              Connect
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="d-flex justify-content-between w-100 px-3 mb-3">
+      <div class="d-flex">
+        <div class="me-2">
+          <input
+            type="search"
+            class="form-control"
+            placeholder="Search"
+            id="inputSearch"
+          />
+        </div>
+        <div class="me-2">
+          <select
+            class="form-select"
+            aria-label="Default select example"
+            id="filter-course"
+          >
+            <option selected disabled value="all">Filter by Course</option>
+            <option value="all">All</option>
+            <option value="BSIT">BSIT</option>
+          </select>
+        </div>
+        <div class="me-2">
+          <select
+            class="form-select"
+            aria-label="Default select example"
+            id="filter-year"
+          >
+            <option selected disabled value="all">Filter by Year</option>
+            <option value="all">All</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+          </select>
+        </div>
+        <div class="me-2">
+          <select
+            class="form-select"
+            aria-label="Default select example"
+            id="filter-section"
+          >
+            <option selected disabled value="all">Filter by Section</option>
+            <option value="all">All</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+          </select>
+        </div>
+        <div class="me-2">
+          <!-- <button class="btn btn-success" id="testBtn">Test Button</button> -->
+          <button class="btn btn-outline-success" id="btnResetFilter">
+            Reset filter
+          </button>
+        </div>
+
+        <div class="me-2">
+          <select
+            class="form-select"
+            aria-label="Default select example"
+            id="selectSort"
+          >
+            <option selected disabled value="none">Sort</option>
+            <option value="none">None</option>
+            <option value="id">ID</option>
+            <option value="firstName">Firstname</option>
+            <option value="lastName">Lastname</option>
+            <option value="course">Course</option>
+            <option value="year">Year</option>
+            <option value="section">Section</option>
+            <option value="time_in">Time-in</option>
+          </select>
+        </div>
+        <div class="me-2">
+          <select
+            class="form-select"
+            aria-label="Default select example"
+            id="selectOrder"
+          >
+            <option selected disabled value="none">Order</option>
+            <option value="none">None</option>
+            <option value="asc">Ascending</option>
+            <option value="desc">Descending</option>
+          </select>
+        </div>
+      </div>
+      <!-- Button trigger modal -->
+      <button
+        type="button"
+        class="btn btn-success"
+        data-bs-toggle="modal"
+        data-bs-target="#addStudentModal"
+        id="btnShowStudentModal"
+      >
+        <i class="fa-solid fa-user-plus"></i>
+        Add Student
+      </button>
+    </div>
+    <div class="container-fluid h-100 w-100 px-3">
+      <table class="table table-bordered" id="student-list">
+        <thead>
+          <tr>
+            <th scope="col">Student ID</th>
+            <th scope="col">First Name</th>
+            <th scope="col">Middle Name</th>
+            <th scope="col">Last Name</th>
+            <th scope="col">Course</th>
+            <th scope="col">Year</th>
+            <th scope="col">Section</th>
+            <th scope="col">Time-in</th>
+          </tr>
+        </thead>
+        <tbody class="list">
+          <tr>
+            <td class="id"></td>
+            <td class="firstName"></td>
+            <td class="middleName"></td>
+            <td class="lastName"></td>
+            <td class="course"></td>
+            <td class="year"></td>
+            <td class="section"></td>
+            <td class="time_in"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="addStudentModal"
+      tabindex="-1"
+      aria-labelledby="addStudentModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <form action="" method="post" id="addStudentForm">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="addStudentModalLabel">
+                Add Student
+              </h1>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <div class="row align-items-end">
+                <div class="mb-3 col-md-6">
+                  <label for="student_id" class="form-label">Student ID</label>
+                  <input
+                    type="text"
+                    id="student_id"
+                    name="student_id"
+                    class="form-control"
+                  />
+                </div>
+                <div class="mb-3 col-md-6">
+                  <label for="card_uid" class="form-label">Card UID</label>
+                  <input
+                    type="text"
+                    id="card_uid"
+                    name="card_uid"
+                    class="form-control"
+                  />
+                </div>
+                <div class="mb-3 col-md-6">
+                  <label for="firstName" class="form-label">First Name</label>
+                  <input
+                    type="text"
+                    id="firstName"
+                    name="firstName"
+                    class="form-control"
+                  />
+                </div>
+                <div class="mb-3 col-md-6">
+                  <label for="lastName" class="form-label">Last Name</label>
+                  <input
+                    type="text"
+                    id="lastName"
+                    name="lastName"
+                    class="form-control"
+                  />
+                </div>
+                <div class="mb-3 col-md-6">
+                  <label for="middleName" class="form-label">Middle Name</label>
+                  <input
+                    type="text"
+                    id="middleName"
+                    name="middleName"
+                    class="form-control"
+                  />
+                </div>
+                <div class="mb-3 col-md-6">
+                  <!-- <label for="course" class="form-label">Course</label> -->
+                  <select
+                    class="form-select"
+                    aria-label="Default select example"
+                    id="course"
+                  >
+                    <option selected disabled value="">Course</option>
+                    <option value="bsit">BSIT</option>
+                  </select>
+                </div>
+                <div class="mt-3 col-md-6">
+                  <!-- <label for="year" class="form-label">Year Level</label> -->
+                  <select
+                    class="form-select"
+                    aria-label="Default select example"
+                    id="year"
+                  >
+                    <option selected disabled value="all">Year level</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                  </select>
+                </div>
+                <div class="mt-3 col-md-6">
+                  <!-- <label for="course" class="form-label">Section</label> -->
+                  <select
+                    class="form-select"
+                    aria-label="Default select example"
+                    id="section"
+                  >
+                    <option selected disabled value="">Section</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                  </select>
+                </div>
+                <div class="mt-3 col">
+                  <label for="avatar" class="form-label">Student Image</label>
+                  <input
+                    type="file"
+                    name="avatar"
+                    id="avatar"
+                    class="form-control"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Close
+              </button>
+              <input
+                type="submit"
+                value="Add Student"
+                class="btn btn-success"
+              />
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+      integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+      crossorigin="anonymous"
+    ></script>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+      integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+      crossorigin="anonymous"
+    ></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script
+      src="https://cdn.socket.io/4.6.0/socket.io.min.js"
+      integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-confetti@latest/dist/js-confetti.browser.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
+    <script src="/js/index.js"></script>
+  </body>
+</html>
